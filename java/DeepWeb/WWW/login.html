@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="css/login.css" type="text/css">
+    <style>
+        input:focus{
+            background-color:#7a7474;
+        }
+        a{
+            text-decoration:none;
+        }
+        div{
+            margin-top:30px;
+            text-align:center;
+        }
+        form div{
+            height:40px;
+        }
+
+        body {
+            background:url("img/login/1.jpeg")  fixed 100% 850px;
+        }
+
+        form input{
+            width:250px;
+            height:30px;
+            color: #110101;
+        }
+
+        form span a{
+            text-decoration:none;
+        }
+        canvas{
+            position:absolute;
+            z-index:-200;
+            padding:0;
+            top:0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+<script>
+
+    var cvs =  document.getElementById("cvs");
+    var ctx =  cvs.getContext("2d");
+    var cw = cvs.width = document.body.clientWidth;
+    var ch = cvs.height = 850;
+    var cols = parseInt(cw/10);
+    var rainArr = [];
+    var step = "26";
+    var speed;
+
+    ctx.font = "bold 10px microsoft yahei";
+
+    function getRain(){
+        for(var i = 0; i < cols; i++){
+            var col = [];
+            speed = parseInt(Math.random()*8 + 3);
+            var rx = parseInt(Math.random()*cw);
+            var ry = parseInt(Math.random()*300);
+            var color = Math.round(Math.random()*255);
+
+            for(var j = 0; j < parseInt(ch/step)/2; j++){
+
+                var code = {
+                    x : rx,
+                    y : -j*step - ry ,
+                    speed : speed,
+                    color : "rgb( 0," + color +",0)",
+                    text : ["1", "0"][Math.round(Math.random())]
+                }
+
+                col.push(code);
+            }
+
+            rainArr.push(col);
+        }
+    }
+
+    function raining(){
+        ctx.clearRect(0, 0, cw, ch);
+
+        for(var i = 0; i < rainArr.length; i++){
+            var col = rainArr[i];
+            for(var j = 0; j < col.length; j++){
+                var code = col[j];
+
+                if(code.y > ch){
+                    code.y = 0;
+                }else{
+                    code.y += code.speed;
+                }
+
+                ctx.fillStyle = code.color;
+                ctx.fillText(code.text, code.x, code.y);
+
+            }
+        }
+        requestAnimationFrame(raining);
+    }
+    getRain();
+    raining();
+</script>
+
+<div class="pop-div" onmousedown="noshow('register');"  id="register" style="background:#191a41 url('img/login/7.jpeg')">
+    <h1 style="color:red;"><b><i>Functional development··········</i></b></h1>
+</div>
+<div class="pop-div" onmousedown="noshow('findpass')" id="findpass" style="background:#191a41 url('img/login/8.jpg')">
+    <h1 style="color:red;"><b><i>Functional development··········</i></b></h1>
+</div>
+<div class="text-div">
+    <h1>welcome!</h1><br>
+    <p style="text-align:center;">
+        <h3>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;welcome to here, you won't be you when you get here,
+            all your information will be kept confidential here,
+            we also hope than you will not reveal any personal information about yourself here,
+            Next, good luck!
+        </h3>
+    </p>
+</div>
+<div class="dialog-div" id="dialog">
+    <div style="margin-top:10px;color:red;border:0">
+        <p id="text"></p>
+    </div>
+    <div style="margin-top:1px;border:0">
+        <input id="submit" type="button" value="sure" onclick="submit()" style="background:rgba(17,121,159,0.98);color:black;">
+    </div>
+
+</div>
+<div class="login-box" >
+    <div class="tit-div"><h2 style="margin:10px;"><i>welcome to login deep web</i></h2></div>
+
+    <div class="login_inner">
+        <form action="index.html" method="post" id="form">
+            <div class="name" style="margin-top:0;">
+                <label style="float:left" for="username"><img src="img/login/2.jpg" alt="用户名" height="40"/></label>
+                <div style="float:left;margin-top:2px;margin-left:10px;">
+                    <input type="text" name="username" id="username" placeholder="please input the username" onblur="unfocus('username');">
+                </div>
+                <span id="u_span" style="color:red;width:12px;text-align:center;padding-top:5px;">
+
+                </span>
+            </div>
+            <div>
+                <label style="float:left" for="password"><img src="img/login/3.jpg" alt="用户名" height="40"/></label>
+                <div style="float:left;margin-top:2px;margin-left:10px;">
+                    <input type="password" name="password" id="password" placeholder="please input the password" onblur="unfocus('password');">
+                </div>
+                <span id="p_span" style="color:red;width:12px;text-align:center;padding-top:5px;">
+
+                </span>
+            </div>
+            <div>
+                <a href="JavaScript:login();">
+                <div class="btn-div">
+                    login
+                </div>
+                </a>
+            </div>
+            <div style="border:0;">
+                <span class="span-left" ><a style="color:red;" href="JavaScript:pop('rg')" id="rg">register</a></span>
+                <span class="span-right" ><a style="color:red;" href="JavaScript:pop('fd');" id = "fd">find password</a></span>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script>
+
+    var dialog = "";
+    var username = "";
+    var password = "";
+    var span;
+    function submit(){
+        username = document.getElementById("username");
+        dialog = document.getElementById("dialog");
+        //var form = document.getElementById("form");
+        dialog.style.display = "none";
+        if(username.value == "" || password.value == ""){
+            return;
+        }
+        //form.submit();
+        location.href = "index.html?name=" + username.value;
+
+    }
+    function  pop(id){
+
+        if(id == "rg"){
+            document.getElementById("register").style.display = "block";
+        }else{
+            document.getElementById("findpass").style.display = "block";
+        }
+    }
+    function unfocus(id){
+
+        var obj = document.getElementById(id);
+        span = obj.parentNode.parentNode.lastElementChild;
+
+        if(obj.value != ""){
+            span.innerHTML = "";
+        }else{
+            if(obj.id == "username") {
+                obj.autofocus = true;
+                span.innerHTML = "please input the user name";
+            }else{
+                span.innerHTML = "please input the password";
+            }
+        }
+        return true;
+    }
+    function login(){
+        if(document.getElementById("username").value != "" && document.getElementById("password").value != "") {
+            var text = document.getElementById("text");
+            text.innerText = "Warning! please don't trust anyone here";
+            dialog = document.getElementById("dialog");
+            dialog.style.display = "table";
+        }else{
+            unfocus("username");
+            unfocus("password");
+        }
+
+    }
+    function noshow(id){
+        var div = document.getElementById(id);
+        div.style.display = "none";
+    }
+</script>
+
+
+</body>
+</html>

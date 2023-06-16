@@ -1,0 +1,7 @@
+[user]
+	name = star
+	email = star@sky.com
+[core]
+	excludesfile = C:/Users/star/git.ignore
+[credential "https://gitee.com"]
+	provider = generic
