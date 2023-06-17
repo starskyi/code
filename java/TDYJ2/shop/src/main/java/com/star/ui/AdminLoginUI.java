@@ -8,13 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 import static com.star.ui.MainInterface.jf;
 
 public class AdminLoginUI extends JDialog {
+    JButton eBtn;
 
-    int flag = 0;
 
     int width = 600;
     int height = 400;
@@ -23,7 +22,10 @@ public class AdminLoginUI extends JDialog {
     JTextField username;
     JPasswordField password;
     AdminDao adminDao = new AdminDao();
-    public AdminLoginUI(){
+
+    public AdminLoginUI(JButton eBtn1){
+        this.eBtn = eBtn1;
+
         Box uBox = Box.createHorizontalBox();
         uBox.setPreferredSize(new Dimension(400, 40));
         JLabel uLabel = new JLabel("账号：");
@@ -55,7 +57,12 @@ public class AdminLoginUI extends JDialog {
                         new String(password.getPassword()))) != null){
                     //管理员登录成功
                     setVisible(false);
-                    new UserManagerUI();
+                    if(eBtn.getText().equals("用户管理")) {
+                        new UserManagerUI();
+                    }else{
+                        new CommodityManagerUI();
+                    }
+
                 }else{
                     //管理员登录失败
                     JOptionPane.showMessageDialog(jf, "该账号权限不够，请联系江哥给你个管理员账号");

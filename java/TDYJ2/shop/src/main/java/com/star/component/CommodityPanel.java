@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import static com.star.ui.MainInterface.user;
 
@@ -27,15 +26,10 @@ public class CommodityPanel extends JPanel {
         this.commodity = commodity1;
         try {
             this.image = ImageIoUtil.read(commodity.getImage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //setPreferredSize(size);
-        //setMinimumSize(size);
-        //setMaximumSize(new Dimension(3000, 225));
-        //setSize(size);
-        //setLayout(null);
 
         JPanel textPanel = new JPanel();
 
@@ -67,9 +61,12 @@ public class CommodityPanel extends JPanel {
         payBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Record record = new Record(null, user.getId(), commodity.getId(), 1, commodity.getPrice());
-                recordDao.add(record);
-                new PayUI(record);
+                if(user != null){
+                    Record record = new Record(null, user.getId(), commodity.getId(), 1, commodity.getPrice());
+                    recordDao.add(record);
+                    new PayUI(record);
+                }
+
             }
         });
 

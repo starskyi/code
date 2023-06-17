@@ -8,8 +8,9 @@
 <!--    <select id="findAll" resultType="com.star.domain.User">-->
 <!--        select * from user-->
 <!--    </select>-->
-    <insert id="add" useGeneratedKeys="true" keyProperty="id">
-        insert into tb_user(username, password) value(#{username}, #{password});
+    <insert id="add">
+        insert into tb_user
+        values(#{username}, #{password}, #{name}, #{telephone}, #{isMerchant}, #{sex}, #{address}, 0.0);
     </insert>
 
     <update id="update" useGeneratedKeys="true" keyProperty="id">

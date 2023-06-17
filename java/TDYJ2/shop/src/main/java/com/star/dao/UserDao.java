@@ -10,7 +10,8 @@ import static com.star.ui.MainInterface.user;
 
 public class UserDao {
     UserMapper mapper = sqlSession.getMapper(UserMapper.class);;
-
+    CommodityDao commodityDao = new CommodityDao();
+    RecordDao recordDao = new RecordDao();
 
     /**
      * 查找所有用户
@@ -34,9 +35,8 @@ public class UserDao {
      * @param user 用户
      * @return 返回添加用户id
      */
-    public boolean add(User user){
-        int id = mapper.add(user);
-        return id > 0;
+    public void add(User user){
+        mapper.add(user);
     }
 
     /**
@@ -51,7 +51,8 @@ public class UserDao {
             user.setId(mapper.update(user));
 
             record.setStatus(2);
-            new RecordDao().updateStatus(record);
+            recordDao.updateStatus(record);
+            commodityDao.updateCount(commodityDao.selectById(record.getCid()).getCount() + 1, record.getCid());
 
             return true;
         }catch (Exception e){
@@ -71,5 +72,9 @@ public class UserDao {
 
     public void delUser(String username){
         mapper.delByUsername(username);
+    }
+
+    public User findUser(String username, String password){
+        return mapper.findUser(username, password);
     }
 }

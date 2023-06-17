@@ -5,9 +5,11 @@
 
 <mapper namespace="com.star.mapper.CommodityMapper">
 
-
-
     <select id="selectByCount" resultType="com.star.domain.Commodity">
         select * from tb_Commodity order by count desc
     </select>
+
+    <insert id="add">
+        insert into tb_commodity values(#{shop}, #{image}, #{title}, #{kind}, #{price}, #{count}, #{repertory})
+    </insert>
 </mapper>

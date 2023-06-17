@@ -1,6 +1,7 @@
 package com.star.ui;
 
 import com.star.component.PayImage;
+import com.star.dao.CommodityDao;
 import com.star.dao.UserDao;
 import com.star.domain.Record;
 import com.star.utils.ScreenUtil;
@@ -16,7 +17,7 @@ public class PayUI extends JDialog {
 
     Record record;
     UserDao userDao = new UserDao();
-
+    CommodityDao commodityDao = new CommodityDao();
     public PayUI(Record record1){
         this.record = record1;
 
@@ -38,6 +39,7 @@ public class PayUI extends JDialog {
                     //支付成功
                     setVisible(false);
                     userDao.buy(record);
+
                     JOptionPane.showMessageDialog(jf, "支付成功");
                     user = new UserDao().selectById(user.getId());
                     username.setText("用户：" + user.getName());

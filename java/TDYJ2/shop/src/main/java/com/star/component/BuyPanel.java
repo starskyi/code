@@ -2,7 +2,6 @@ package com.star.component;
 
 import com.star.dao.CommodityDao;
 import com.star.dao.RecordDao;
-import com.star.dao.UserDao;
 import com.star.domain.Commodity;
 import com.star.domain.Record;
 import com.star.domain.User;
@@ -14,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class BuyPanel extends Box {
     Dimension size = new Dimension(2200, 300);
@@ -41,7 +39,7 @@ public class BuyPanel extends Box {
         this.record = record;
         try {
             bufferedImage = ImageIoUtil.read(commodity.getImage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

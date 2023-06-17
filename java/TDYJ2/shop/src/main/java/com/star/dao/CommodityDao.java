@@ -1,16 +1,9 @@
 package com.star.dao;
 
 import com.star.domain.Commodity;
-import com.star.domain.User;
 import com.star.mapper.CommodityMapper;
-import com.star.mapper.UserMapper;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.star.ui.MainInterface.sqlSession;
@@ -25,7 +18,9 @@ public class CommodityDao {
      * @return 所有商品
      */
     public List<Commodity> findAll(){
-        List<Commodity> list = mapper.selectByKind(8);
+
+        List<Commodity> list = new ArrayList<Commodity>();
+        list.addAll(mapper.selectByKind(8));
         list.addAll(mapper.findKindNotEight());
         return list;
     }
@@ -61,4 +56,19 @@ public class CommodityDao {
         return mapper.findKindNotEight();
     }
 
+    public void del(String image){
+        mapper.del(image);
+    }
+
+    public void add(Commodity commodity){
+        mapper.add(commodity);
+    }
+
+    public void updateCount(int count, int id){
+        mapper.updateCount(count, id);
+    }
+
+    public List<Commodity> selectByTitle(String title){
+        return mapper.selectByTitle(title);
+    }
 }

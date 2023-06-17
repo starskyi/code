@@ -23,7 +23,7 @@ public class ClassifyUI extends Box {
     JLabel femaleWear = new MenuLabel("女装");
     JLabel food = new MenuLabel("美食");
     JLabel book = new MenuLabel("书籍");
-    JLabel homeUse = new MenuLabel("家用");
+    JLabel other = new MenuLabel("其他");
 
 
     List<Commodity> goods;
@@ -53,7 +53,7 @@ public class ClassifyUI extends Box {
                 femaleWear.setBackground(null);
                 book.setBackground(null);
                 food.setBackground(null);
-                homeUse.setBackground(null);
+                other.setBackground(null);
                 label.setOpaque(true);
                 label.setBackground(new Color(60, 64, 198));
 
@@ -109,7 +109,7 @@ public class ClassifyUI extends Box {
         femaleWear.addMouseListener(cmListener);
         food.addMouseListener(cmListener);
         book.addMouseListener(cmListener);
-        homeUse.addMouseListener(cmListener);
+        other.addMouseListener(cmListener);
 
         phone.setOpaque(true);
         phone.setBackground(new Color(60, 64, 198));
@@ -127,7 +127,7 @@ public class ClassifyUI extends Box {
         menu.add(Box.createHorizontalStrut(20));
         menu.add(book);
         menu.add(Box.createHorizontalStrut(20));
-        menu.add(homeUse);
+        menu.add(other);
         add(menu);
 
         homeUI = new HomeUI(goods);

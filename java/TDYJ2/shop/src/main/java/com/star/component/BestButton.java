@@ -10,12 +10,6 @@ public class BestButton extends JButton {
     public BestButton(String text, String name){
         super(text);
         super.setName(name);
-//        this.size = new Dimension(width, height);
-//
-//        setPreferredSize(size);
-//        setMinimumSize(size);
-//        setMaximumSize(size);
-//        setSize(size);
         setFont(new Font(null, Font.BOLD, 20));
         setLayout(null);
     }

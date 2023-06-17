@@ -3,7 +3,6 @@ package com.star.utils;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class CircleImageUtil {
     public static BufferedImage getCircleImage(String path, int radius){
@@ -52,7 +51,7 @@ public class CircleImageUtil {
 
             return circleImage;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

@@ -2,6 +2,7 @@ package com.star.mapper;
 
 import com.star.domain.User;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UserMapper {
     User selectById(int id);
 
 
-    int add(User user);
+    void add(User user);
 
     int update(User user);
 
@@ -24,5 +25,8 @@ public interface UserMapper {
 
     @Delete("delete from tb_user where username = #{username}")
     void delByUsername(String username);
+
+    @Select("select * from tb_user where username = #{username} and password = #{password}")
+    User findUser(@Param("username")String username, @Param("password")String password);
 
 }

@@ -1,7 +1,8 @@
 package com.star.ui;
 
-import com.star.dao.UserDao;
-import com.star.domain.User;
+import com.star.dao.CommodityDao;
+import com.star.domain.Commodity;
+import com.star.utils.CreateDataUtil;
 import com.star.utils.ScreenUtil;
 
 import javax.swing.*;
@@ -17,16 +18,16 @@ import java.util.Vector;
 
 import static com.star.ui.MainInterface.jf;
 
-public class UserManagerUI extends JDialog {
+public class CommodityManagerUI extends JDialog{
 
     int width = 1600;
     int height = 1000;
 
     JPanel btnPanel = new JPanel();
 
-    JButton clientBtn = new JButton("普通用户管理");
-    JButton merchantBtn = new JButton("商家用户管理");
+    JButton addBtn = new JButton("添加");
     JButton deleteBtn = new JButton("删除");
+
 
     JTable table;
 
@@ -35,11 +36,10 @@ public class UserManagerUI extends JDialog {
 
     DefaultTableModel model;
 
-    UserDao userDao = new UserDao();
-    public UserManagerUI(){
+    CommodityDao commodityDao = new CommodityDao();
+    public CommodityManagerUI(){
 
-        clientBtn.setFont(new Font(null, Font.BOLD, 22));
-        merchantBtn.setFont(new Font(null, Font.BOLD, 22));
+        addBtn.setFont(new Font(null, Font.BOLD, 22));
         deleteBtn.setFont(new Font(null, Font.BOLD, 22));
         btnPanel.setMaximumSize(new Dimension(width, 25));
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -50,8 +50,8 @@ public class UserManagerUI extends JDialog {
                 int flag = JOptionPane.showConfirmDialog(jf, "是否删除");
                 if(flag == 0){
                     //删除
-                    String username = (String)table.getValueAt(table.getSelectedRow(), 3);
-                    userDao.delUser(username);
+                    String image = (String)table.getValueAt(table.getSelectedRow(), 1);
+                    commodityDao.del(image);
                     model.removeRow(table.getSelectedRow());
                     model.fireTableDataChanged();
                 }
@@ -62,21 +62,13 @@ public class UserManagerUI extends JDialog {
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                data.clear();
-                if(e.getActionCommand().equals("普通用户管理")){
-                    List<User> users = userDao.findClient();
-                    createData(users);
-
-                }else{
-                    List<User> users = userDao.findMerchant();
-                    createData(users);
-                }
+                new CommodityAddUI(data, model);
                 model.fireTableDataChanged();
             }
         };
-
-
-        String[] ts = {"编号", "姓名", "性别", "账号", "密码", "余额"};
+        List<Commodity> goods = commodityDao.findAll();
+        CreateDataUtil.createData(data, goods);
+        String[] ts = {"编号", "图片", "描述", "商家", "价格", "库存"};
 
         titles.addAll(Arrays.asList(ts));
 
@@ -106,11 +98,8 @@ public class UserManagerUI extends JDialog {
         vBox.add(Box.createVerticalStrut(20));
         vBox.add(scrollPane);
 
-        clientBtn.addActionListener(listener);
-        merchantBtn.addActionListener(listener);
-        btnPanel.add(clientBtn);
-        btnPanel.add(merchantBtn);
-        btnPanel.add(Box.createHorizontalStrut(1000));
+        addBtn.addActionListener(listener);
+        btnPanel.add(addBtn);
         btnPanel.add(deleteBtn);
 
         add(vBox);
@@ -118,15 +107,4 @@ public class UserManagerUI extends JDialog {
         setVisible(true);
     }
 
-    public void createData(List<User> users){
-        int i = 1;
-        for(User user : users){
-            Vector vector = new Vector();
-            List<String> list = Arrays.asList(i + "", user.getName(), user.getSex(), user.getUsername(),
-                    user.getPassword(), user.getMoney() + "");
-            vector.addAll(list);
-            data.add(vector);
-            i++;
-        }
-    }
 }

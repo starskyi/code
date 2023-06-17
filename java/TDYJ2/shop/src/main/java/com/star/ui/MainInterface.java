@@ -4,7 +4,6 @@ import com.star.component.*;
 import com.star.dao.AdminDao;
 import com.star.dao.CommodityDao;
 import com.star.dao.UserDao;
-import com.star.domain.Admin;
 import com.star.domain.User;
 import com.star.utils.ImageIoUtil;
 import com.star.utils.ScreenUtil;
@@ -38,9 +37,8 @@ public class MainInterface {
     public static JFrame jf = new JFrame("万物捞");
 
     //数据库访问对象
-    UserDao userDao = new UserDao();
     CommodityDao commodityDao = new CommodityDao();
-    AdminDao adminDao = new AdminDao();
+
 
     int width = 2000;
     int height = 1200;
@@ -49,7 +47,8 @@ public class MainInterface {
 
 
     //当前用户
-    public static User user = new User(1, "zhangsan", "123456", "张三", "18534658", 0, "男", "三峡", 10000.0);
+    //public static User user = new User(1, "zhangsan", "123456", "张三", "18534658", 0, "男", "三峡", 10000.0);
+    public static User user;
     public static JLabel username;
     public static JLabel money;
 
@@ -77,6 +76,7 @@ public class MainInterface {
 
     //商品搜搜框
     JTextField input;
+    JButton searchBtn = new JButton("搜索");
 
     Box bigBox;
     Box leftBox;
@@ -85,10 +85,6 @@ public class MainInterface {
         jf.setBounds((ScreenUtil.getScreenWidth() - width) / 2, (ScreenUtil.getScreenHeight() - height) / 2,
                 width, height);
         jf.setIconImage(ImageIoUtil.read("img/logo.jpg"));
-
-
-        //homeUi = new HomeUI(commodityDao.selectByKind(8));
-        //recommendUi = new HomeUI(commodityDao.selectByCount());
 
         panel.setPreferredSize(new Dimension(1000, 800));
 
@@ -99,10 +95,16 @@ public class MainInterface {
         JPanel p = new JPanel();
         p.setMinimumSize(new Dimension(2000, 60));
 
-
         input = new JTextField(20);
-        JButton searchBtn = new JButton("搜索");
 
+
+        searchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HomeUI homeUi = new HomeUI(commodityDao.selectByTitle("%" + input.getText() + "%"));
+                updateUI(homeUi);
+            }
+        });
         searchBtn.setFont(new Font(null, Font.BOLD, 20));
         input.setFont(new Font(null, Font.BOLD, 30));
         input.setForeground(Color.GRAY);
@@ -112,12 +114,11 @@ public class MainInterface {
         input.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if(input.getText().equals("请输入商品名称")){
+                if (input.getText().equals("请输入商品名称")) {
                     input.setForeground(null);
                     input.setText("");
                 }
             }
-
             @Override
             public void focusLost(FocusEvent e) {
                 if(input.getText().equals("") || input.getText().replace(" ", "").length() <= 0){
@@ -130,10 +131,9 @@ public class MainInterface {
         //登录，注册
         JPanel p2 = new JPanel();
         JLabel loginL = new JLabel("登录");
-        JLabel registerL = new JLabel("注册");
+        final JLabel registerL = new JLabel("注册");
         loginL.setFont(new Font(null, Font.BOLD, 30));
         registerL.setFont(new Font(null, Font.BOLD, 30));
-
 
         p.add(input);
         p.add(searchBtn);
@@ -144,12 +144,9 @@ public class MainInterface {
         searchBox.add(p);
         searchBox.add(p2);
 
-
-
         selected = home;
         home.setOpaque(true);
         home.setBackground(new Color(60, 64, 198));
-
 
 
         Box topBox = Box.createHorizontalBox();
@@ -174,6 +171,13 @@ public class MainInterface {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //展示对应页面
+                if(e.getComponent() == registerL){
+                    //注册
+                    new RegisterUI();
+                }else{
+                    //登录
+                    new LoginUI();
+                }
             }
             @Override
             public void mousePressed(MouseEvent e) {
@@ -231,13 +235,18 @@ public class MainInterface {
                     ClassifyUI classifyUI = new ClassifyUI(commodityDao.selectByKind(1));
                     updateUI(classifyUI);
 
-
                 }else if(component == message){
                     //信息
+                    JOptionPane.showMessageDialog(jf, "暂无消息");
                 }else{
                     //我的
-                    MyUI myUI = new MyUI(user);
-                    updateUI(myUI);
+                    if(user != null){
+                        MyUI myUI = new MyUI(user);
+                        updateUI(myUI);
+                    }else{
+                        JOptionPane.showMessageDialog(jf, "您还没登录，请登录");
+                    }
+
                 }
             }
             @Override
@@ -275,7 +284,7 @@ public class MainInterface {
             public void mousePressed(MouseEvent e) {
                 if(login.getText().equals("登录")){
 
-                    username.setText("用户：" + user.getName());
+                    new LoginUI();
                     login.setText("退出登录");
                     login.repaint();
                 }else{
@@ -313,12 +322,13 @@ public class MainInterface {
         //左侧容器
         JPanel headPanel = new JPanel();
         //头像
-        HeadImage image = new HeadImage("img/logo.jpg", 50, jf);
+        HeadImage image = new HeadImage("img/logo.jpg", 60, jf);
         headPanel.add(image);
-        username = new JLabel("用户：" + user.getName());
-        money = new JLabel("余额：" + user.getMoney());
+        username = new JLabel("用户：无");
+        money = new JLabel("余额：无");
         username.setFont(new Font(null, Font.BOLD, 25));
         money.setFont(new Font(null, Font.BOLD, 25));
+
 
         headPanel.add(username);
         headPanel.add(money);
@@ -329,33 +339,26 @@ public class MainInterface {
         set.addActionListener(setListener);
 
 
-        userManage.addActionListener(new ActionListener() {
+        ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 if(user == null){
                     JOptionPane.showMessageDialog(jf, "请登录");
                 }else{
-                    new AdminLoginUI();
+                    if(e.getActionCommand().equals("用户管理")){
+
+                        new AdminLoginUI(userManage);
+                    }else{
+                        new AdminLoginUI(goodsManage);
+                    }
                 }
-//                String username = JOptionPane.showInputDialog(jf, "请输入账号：");
-//                String password = JOptionPane.showInputDialog(jf, "请输入密码：");
-//                if(adminDao.selectAdmin(new Admin(null, null, null)) != null){
-//                    //管理员登录成功
-//                    new UserManagerUI();
-//
-//                }else{
-//                    //登录失败
-//                    new UserManagerUI();
-//                    if(user == null){
-//                        JOptionPane.showMessageDialog(jf, "请登录");
-//                    }else{
-//                        JOptionPane.showMessageDialog(jf, "该账号权限不够，请联系江哥给你个管理员账号");
-//                    }
-//
-//                }
+
             }
-        });
+        };
+        userManage.addActionListener(listener);
+        goodsManage.addActionListener(listener);
+
 
         leftMenu.add(userManage);
         leftMenu.add(Box.createVerticalStrut(20));
