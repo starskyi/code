@@ -18,10 +18,13 @@ public class CommodityDao {
      * @return 所有商品
      */
     public List<Commodity> findAll(){
-
         List<Commodity> list = new ArrayList<Commodity>();
-        list.addAll(mapper.selectByKind(8));
-        list.addAll(mapper.findKindNotEight());
+        try{
+            list.addAll(mapper.selectByKind(8));
+            list.addAll(mapper.findKindNotEight());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -39,7 +42,13 @@ public class CommodityDao {
      * @return 排序后的商品
      */
     public List<Commodity> selectByCount(){
-        return mapper.selectByCount();
+        List<Commodity> list = new ArrayList<Commodity>();
+        try{
+            list.addAll(mapper.selectByCount());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
 
@@ -49,11 +58,23 @@ public class CommodityDao {
      * @return 指定种类商品
      */
     public List<Commodity> selectByKind(int kind){
-        return mapper.selectByKind(kind);
+        List<Commodity> list = new ArrayList<Commodity>();
+        try{
+            list.addAll(mapper.selectByKind(kind));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public List<Commodity> findKindNotEight(){
-        return mapper.findKindNotEight();
+        List<Commodity> list = new ArrayList<Commodity>();
+        try{
+            list.addAll(mapper.findKindNotEight());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public void del(String image){
@@ -69,6 +90,12 @@ public class CommodityDao {
     }
 
     public List<Commodity> selectByTitle(String title){
-        return mapper.selectByTitle(title);
+        List<Commodity> list = new ArrayList<Commodity>();
+        try{
+            list.addAll(mapper.selectByTitle(title));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }
