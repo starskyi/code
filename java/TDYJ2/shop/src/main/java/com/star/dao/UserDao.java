@@ -75,6 +75,12 @@ public class UserDao {
     }
 
     public User findUser(String username, String password){
-        return mapper.findUser(username, password);
+        User user = null;
+        try{
+            user = mapper.findUser(username, password);
+        }catch (Exception e){
+
+        }
+        return user;
     }
 }
